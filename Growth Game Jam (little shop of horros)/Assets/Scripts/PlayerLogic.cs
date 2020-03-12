@@ -8,6 +8,7 @@ public class PlayerLogic : MonoBehaviour
     bool m_nearAudry = false;
     bool m_holdingDentist = false;
     Transform m_destist;
+    Dentist m_dentistScript;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -37,35 +38,41 @@ public class PlayerLogic : MonoBehaviour
 
     private void Update()
     {
-        
-            if (Input.GetButton("interact"))
-            {
+
+        if (Input.GetButton("interact"))
+        {
             if (m_nearDentist)
             {
                 // if dentist is not dead
-                if (!m_holdingDentist)
+                m_dentistScript = m_destist.gameObject.GetComponent<Dentist>();
+                if (!m_dentistScript.m_alive)
                 {
-                    Debug.Log("Dragging Dentist");
-                    m_destist.parent = transform;
-                    m_holdingDentist = true;
-                }
-                else
-                {
-                    if(m_nearAudry)
+                    if (!m_holdingDentist)
                     {
-                        m_destist.parent = null;
+                        Debug.Log("Dragging Dentist");
+                        m_destist.parent = transform;
+                        m_holdingDentist = true;
+                    }
+                    else
+                    {
+                        if (m_nearAudry)
+                        {
+                            m_destist.parent = null;
+                        }
                     }
                 }
 
             }
+        }
 
-            if(Input.GetButtonDown("Fire1"))
+        if(Input.GetButtonDown("Fire1"))
+        {
+            if (m_nearDentist)
             {
-                if(m_nearDentist)
-                {
-
-                }
+                m_dentistScript=m_destist.gameObject.GetComponent<Dentist>();
+                m_dentistScript.killDentist();
             }
+        
         }
     }
 }
